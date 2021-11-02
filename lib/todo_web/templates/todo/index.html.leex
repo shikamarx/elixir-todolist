@@ -1,0 +1,47 @@
+<div class="todo-container" style="padding-top: 1.8em;">
+  <div class="row d-flex justify-content-center align-items-center">
+    <div class="col col-xl-10">
+      <div class="card" style="border-radius: 9px; background-color: #eee;">
+        <div class="card-body" style="min-width: 45em; min-height: 36em; padding: 2.1em 2.1em 2.1em 2.1em;">
+          # Todo list
+          <form phx-submit="add">
+            <div class="input-group" style="margin-top: 1.2em; margin-bottom: 1.2em;">
+              <input name="label" type="text" class="form-control" placeholder="Add new todo here" aria-label="Add new todo" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button type="submit" class="input-group-text" id="basic-addon2">Add todo</button>
+              </div>
+            </div>
+            <%= if @error != "" do %>
+            <div class="error">/!\ <%= @error %></div>
+            <% end %>
+          </form>
+          <table style="border-style: none;">
+            <tbody>
+              <input type="hidden" name="list" value={@todolist}>
+              <%= case @todolist do [] -> "/!\\ No record found"; _ -> "" end %>
+              <%= for {todo, index} <- @todolist |> Enum.with_index() do %>
+              <tr>
+                <td>
+                  <span class="todo-status">
+                    <a phx-click="change_status" phx-value-index="<%= index %>">
+                      <%= if todo.done do %>[X]<% else %>[&nbsp;&nbsp;]<% end %>
+                    </a>
+                  </span>
+                </td>
+                <%= if todo.done do %>
+                  <td class="todo-label done"><%= todo.label %></td>
+                <% else %>
+                  <td class="todo-label"><%= todo.label %></td>
+                <% end %>
+                <td class="actions">
+                  <a phx-click="delete" phx-value-index="<%= index %>">x</a>
+                </td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
