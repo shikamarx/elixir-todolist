@@ -3,22 +3,25 @@
     <div class="col col-xl-10">
       <div class="card" style="border-radius: 9px; background-color: #eee;">
         <div class="card-body" style="min-width: 45em; min-height: 36em; padding: 2.1em 2.1em 2.1em 2.1em;">
-          # Todo list
+          <span style="font-size: 18px;"># Todo list</span>
           <form phx-submit="add">
             <div class="input-group" style="margin-top: 1.2em; margin-bottom: 1.2em;">
               <input name="label" type="text" class="form-control" placeholder="Add new todo here" aria-label="Add new todo" aria-describedby="basic-addon2">
               <div class="input-group-append">
-                <button type="submit" class="input-group-text" id="basic-addon2">Add todo</button>
+                <button type="submit" class="input-group-text" id="basic-addon2">Add</button>
               </div>
             </div>
             <%= if @error != "" do %>
-            <div class="error">/!\ <%= @error %></div>
+            <div class="error"><span style="font-size: 12px;">&#9888;</span> <%= @error %></div>
             <% end %>
           </form>
           <table style="border-style: none;">
             <tbody>
               <input type="hidden" name="list" value={@todolist}>
-              <%= case @todolist do [] -> "/!\\ No record found"; _ -> "" end %>
+              <%= case @todolist do %>
+                <% [] -> %><span style="font-size: 12px;">&#9888;</span> No record found
+                <% _ -> %>
+              <% end%>
               <%= for {todo, index} <- @todolist |> Enum.with_index() do %>
               <tr>
                 <td>
