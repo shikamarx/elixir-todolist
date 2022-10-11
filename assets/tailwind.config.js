@@ -10,7 +10,11 @@ module.exports = {
     '../lib/*_web/**/*.*ex'
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'body': "url('../images/bg.jpg')",
+      }
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),
