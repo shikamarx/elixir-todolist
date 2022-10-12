@@ -2,7 +2,7 @@ defmodule TodoWeb.TodoLive do
   use TodoWeb, :live_view
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, todolist: [], error: "")}
+    {:ok, assign(socket, todolist: [], error: "", done_count: 0)}
   end
 
   def handle_event("add", %{"label" => label}, socket) do
@@ -15,14 +15,14 @@ defmodule TodoWeb.TodoLive do
   end
 
   def handle_event("delete", %{"index" => index}, socket) do
-    todolist = socket.assigns.todolist
-    {:noreply, assign(socket, todolist: List.delete_at(todolist, String.to_integer(index)), error: "")}
+    todolist = socket.assigns.todolist |> List.delete_at(String.to_integer(index))
+    {:noreply, assign(socket, todolist: todolist, error: "", done_count: todolist |> Enum.count(&(&1.done)))}
   end
 
   def handle_event("change_status", %{"index" => index}, socket) do
-    todolist = socket.assigns.todolist
-    todo = Enum.at(todolist, String.to_integer(index))
-    {:noreply, assign(socket, todolist: List.replace_at(todolist, String.to_integer(index), %{label: todo.label, done: !todo.done}))}
+    todo = socket.assigns.todolist |> Enum.at(String.to_integer(index))
+    todolist = socket.assigns.todolist |> List.replace_at(String.to_integer(index), %{label: todo.label, done: !todo.done})
+    {:noreply, assign(socket, todolist: todolist, done_count: todolist |> Enum.count(&(&1.done)))}
   end
 
   def validate_todo_label(label) do

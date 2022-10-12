@@ -1,17 +1,20 @@
 <div class="mt-6 p-6 bg-green-50 rounded-lg shadow-xl">
   <div class="flex flex-row justify-between mb-6">
     <span class="text-xl font-bold">#TodoList</span>
-    <span class="text-sm font-bold">5/9</span>
+    <span class="text-sm font-bold"><%= "#{@done_count}/#{Enum.count(@todolist)}" %></span>
   </div>
   <form phx-submit="add" class="mb-6">
     <div class="relative">
-      <input name="label" type="text" class="w-full py-2 text-gray-600 bg-green-100 border-x-0 border-t-0 pr-10 focus:ring-0 focus:bg-white focus:text-gray-600 focus:outline-none focus:border-green-600" placeholder="Add new todo here" autocomplete="off">
+      <input name="label" type="text" class='w-full py-2 text-gray-600 bg-green-100 border-x-0 border-t-0 pr-10 focus:ring-0 focus:bg-white focus:text-gray-600 focus:outline-none <%= if @error != "" do "focus:border-red-600 border-red-600"; else "focus:border-green-600" end %>' placeholder="Add new todo here" autocomplete="off">
       <span class="absolute inset-y-0 right-2 flex items-center pl-2">
-        <button class="text-white bg-gray-600">
+        <button class='text-white <%= if @error != "" do "bg-red-600"; else "bg-gray-600" end %>'>
           <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-7 h-7 p-1"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         </button>
       </span>
     </div>
+    <%= if @error != "" do %>
+      <div class="error mt-3 text-red-600"><%= @error %></div>
+    <% end %>
   </form>
   <div>
     <input type="hidden" name="list" value={@todolist}>
