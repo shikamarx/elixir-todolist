@@ -5,7 +5,7 @@
   </div>
   <form phx-submit="add" class="mb-6">
     <div class="relative">
-      <input name="label" type="text" class='w-full py-2 text-gray-600 bg-green-100 border-x-0 border-t-0 pr-10 focus:ring-0 focus:bg-white focus:text-gray-600 focus:outline-none <%= if @error != "" do "focus:border-red-600 border-red-600"; else "focus:border-green-600" end %>' placeholder="Add new todo here" autocomplete="off">
+      <input name="label" type="text" class='w-full py-2 text-gray-600 bg-green-100 border-x-0 border-t-0 pr-11 focus:ring-0 focus:bg-white focus:text-gray-600 focus:outline-none <%= if @error != "" do "focus:border-red-600 border-red-600"; else "focus:border-green-600" end %>' placeholder="Add new todo here" autocomplete="off">
       <span class="absolute inset-y-0 right-2 flex items-center pl-2">
         <button class='text-white <%= if @error != "" do "bg-red-600"; else "bg-gray-600" end %>'>
           <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-7 h-7 p-1"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
@@ -16,14 +16,15 @@
       <div class="error mt-3 text-red-600"><%= @error %></div>
     <% end %>
   </form>
-  <div>
-    <input type="hidden" name="list" value={@todolist}>
-    <%= case @todolist do [] -> "No record found"; _ -> "" end %>
-    <ul class="space-y-3">
+  <%= case @todolist do %>
+  <%= [] -> %>No record found
+  <%= _ -> %>
+  <div class="flex max-h-[630px] overflow-auto">
+    <ul class="space-y-2 mb-0">
       <%= for {todo, index} <- @todolist |> Enum.with_index() do %>
       <li>
-        <div class="p-3 flex items-center justify-between bg-green-100">
-          <div class="flex pr-3 flex items-center">
+        <div class="p-3 flex items-center justify-between bg-green-100"  style="width: 100% !impotant;">
+          <div class="flex pr-3 items-center">
             <input phx-click="change_status" phx-value-index="<%= index %>" <%= if todo.done do %>checked<% else %><% end %> type="checkbox" class="mr-3 border-3 text-green-600 border-green-600 focus:ring-offset-0 focus:ring-0">
             <span class="<%= if todo.done do 'text-gray-400 line-through' end %>"><%= todo.label %></span>
           </div>
@@ -37,8 +38,12 @@
       <% end %>
     </ul>
   </div>
+  <% end %>
 </div>
-<div class="mt-3 flex justify-between text-xs text-gray-400">
-  <span class="text-gray-500">&copy Copyright Shikamarx <small>2022</small></span>
-  <span>Background image by <strong>Freepik</strong></span>
+<div class="mt-3 mb-6 flex justify-between text-xs text-gray-400">
+  <span class="text-gray-500">&copy Copyright <%= DateTime.utc_now.year %> - <a class="text-inherit hover:text-inherit" target="blank" href="https://github.com/shikamarx">Shikamarx</a></span>
+  <span>
+    Background image by
+    <a class="text-inherit hover:text-inherit" target="blank" href="https://www.freepik.com/free-vector/hand-painted-watercolor-nature-background_13723081.htm#query=nature&position=12&from_view=keyword"><strong>Freepik</strong></a>
+  </span>
 </div>
