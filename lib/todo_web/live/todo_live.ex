@@ -1,32 +1,46 @@
 defmodule TodoWeb.TodoLive do
   use TodoWeb, :live_view
+  alias Todo.Todolist
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, todolist: [], error: "", done_count: 0)}
+    items = Todolist.list_items
+      |> Enum.sort_by(&(&1.id))
+    {:ok, assign(socket, items: items, error: "", done_count: items |> Enum.count(&(&1.status)))}
   end
 
-  def handle_event("add", %{"label" => label}, socket) do
-    new_todolist = [%{label: label |> validate_todo_label(), done: false}|socket.assigns.todolist]
-    if 5 > label |> validate_todo_label |> String.length do
-      {:noreply, assign(socket, todolist: socket.assigns.todolist, error: "Make sure content has at least 5 caracters!")}
+  def handle_event("add", %{"content" => content}, socket) do
+    if 5 > content |> validate_content |> String.length do
+      {:noreply, assign(socket, items: socket.assigns.items, error: "Make sure content has at least 5 caracters!")}
     else
-      {:noreply, assign(socket, todolist: new_todolist, error: "")}
+      Todolist.create_item(%{content: content, status: false})
+      items = Todolist.list_items
+        |> Enum.sort_by(&(&1.id))
+      {:noreply, assign(socket, items: items, error: "")}
     end
   end
 
-  def handle_event("delete", %{"index" => index}, socket) do
-    todolist = socket.assigns.todolist |> List.delete_at(String.to_integer(index))
-    {:noreply, assign(socket, todolist: todolist, error: "", done_count: todolist |> Enum.count(&(&1.done)))}
+  def handle_event("delete", %{"id" => id}, socket) do
+    id
+      |> String.to_integer
+      |> Todolist.get_item!
+      |> Todolist.delete_item
+    items = Todolist.list_items
+      |> Enum.sort_by(&(&1.id))
+    {:noreply, assign(socket, items: items, error: "", done_count: items |> Enum.count(&(&1.status)))}
   end
 
-  def handle_event("change_status", %{"index" => index}, socket) do
-    todo = socket.assigns.todolist |> Enum.at(String.to_integer(index))
-    todolist = socket.assigns.todolist |> List.replace_at(String.to_integer(index), %{label: todo.label, done: !todo.done})
-    {:noreply, assign(socket, todolist: todolist, done_count: todolist |> Enum.count(&(&1.done)))}
+  def handle_event("change_status", %{"id" => id}, socket) do
+    item = id
+      |> String.to_integer
+      |> Todolist.get_item!
+    Todolist.update_item(item, %{status: !item.status})
+    items = Todolist.list_items
+      |> Enum.sort_by(&(&1.id))
+    {:noreply, assign(socket, items: items, done_count: items |> Enum.count(&(&1.status)))}
   end
 
-  def validate_todo_label(label) do
-    label
+  def validate_content(content) do
+    content
     |> String.trim()
   end
 
