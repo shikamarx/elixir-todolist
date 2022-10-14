@@ -20,6 +20,10 @@
   <%= [] -> %>No record found
   <%= _ -> %>
   <div class="flex space-x-3 mb-3 text-sm font-bold">
+    <%= case @toggle_marking_action do %>
+    <%= "mark_all" -> %><a phx-click="mark_all">Mark all</a>
+    <%= "unmark_all" -> %><a phx-click="unmark_all">Unmark all</a>
+    <% end %>
     <a phx-click="clear">Clear</a>
   </div>
   <div class="flex max-h-[630px] overflow-auto">

@@ -5,7 +5,7 @@ defmodule TodoWeb.TodoLive do
   def mount(_params, _session, socket) do
     items = Todolist.list_items
       |> Enum.sort_by(&(&1.id))
-    {:ok, assign(socket, items: items, error: "", done_count: items |> Enum.count(&(&1.status)))}
+    {:ok, assign(socket, items: items, error: "", done_count: items |> Enum.count(&(&1.status)), toggle_marking_action: items |> marking_action)}
   end
 
   def handle_event("add", %{"content" => content}, socket) do
@@ -15,7 +15,7 @@ defmodule TodoWeb.TodoLive do
       Todolist.create_item(%{content: content, status: false})
       items = Todolist.list_items
         |> Enum.sort_by(&(&1.id))
-      {:noreply, assign(socket, items: items, error: "")}
+      {:noreply, assign(socket, items: items, error: "", toggle_marking_action: items |> marking_action)}
     end
   end
 
@@ -26,7 +26,7 @@ defmodule TodoWeb.TodoLive do
       |> Todolist.delete_item
     items = Todolist.list_items
       |> Enum.sort_by(&(&1.id))
-    {:noreply, assign(socket, items: items, error: "", done_count: items |> Enum.count(&(&1.status)))}
+    {:noreply, assign(socket, items: items, error: "", done_count: items |> Enum.count(&(&1.status)), toggle_marking_action: items |> marking_action)}
   end
 
   def handle_event("change_status", %{"id" => id}, socket) do
@@ -36,7 +36,7 @@ defmodule TodoWeb.TodoLive do
     Todolist.update_item(item, %{status: !item.status})
     items = Todolist.list_items
       |> Enum.sort_by(&(&1.id))
-    {:noreply, assign(socket, items: items, done_count: items |> Enum.count(&(&1.status)))}
+    {:noreply, assign(socket, items: items, done_count: items |> Enum.count(&(&1.status)), toggle_marking_action: items |> marking_action)}
   end
 
   def handle_event("clear", _, socket) do
@@ -45,9 +45,28 @@ defmodule TodoWeb.TodoLive do
     {:noreply, assign(socket, items: [], done_count: 0)}
   end
 
+  def handle_event("mark_all", _, socket) do
+    items = Todolist.list_items
+      |> Enum.map(&(Todolist.update_item(&1, %{status: true})))
+    {:noreply, assign(socket, items: items, done_count: items |> Enum.count(&(&1.status)), toggle_marking_action: items |> marking_action)}
+  end
+
+  def handle_event("unmark_all", _, socket) do
+    items = Todolist.list_items
+      |> Enum.map(&(Todolist.update_item(&1, %{status: false})))
+    {:noreply, assign(socket, items: items, done_count: items |> Enum.count(&(&1.status)), toggle_marking_action: items |> marking_action)}
+  end
+
   def validate_content(content) do
     content
     |> String.trim()
+  end
+
+  def marking_action(items \\ []) do
+    case items |> Enum.count(&(!&1.status)) do
+      0 -> "unmark_all"
+      _ -> "mark_all"
+    end
   end
 
   def render(assigns) do
