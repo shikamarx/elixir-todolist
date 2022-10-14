@@ -39,6 +39,12 @@ defmodule TodoWeb.TodoLive do
     {:noreply, assign(socket, items: items, done_count: items |> Enum.count(&(&1.status)))}
   end
 
+  def handle_event("clear", _, socket) do
+    Todolist.list_items
+      |> Enum.map(&(Todolist.delete_item(&1)))
+    {:noreply, assign(socket, items: [], done_count: 0)}
+  end
+
   def validate_content(content) do
     content
     |> String.trim()

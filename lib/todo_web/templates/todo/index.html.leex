@@ -3,7 +3,7 @@
     <span class="text-xl font-bold">#TodoList</span>
     <span class="text-sm font-bold"><%= "#{@done_count}/#{Enum.count(@items)}" %></span>
   </div>
-  <form phx-submit="add" class="mb-6">
+  <form phx-submit="add" class="mb-3">
     <div class="relative">
       <input name="content" type="text" class='w-full py-2 text-gray-600 bg-green-100 border-x-0 border-t-0 pr-11 focus:ring-0 focus:bg-white focus:text-gray-600 focus:outline-none <%= if @error != "" do "focus:border-red-600 border-red-600"; else "focus:border-green-600" end %>' placeholder="Add new item here" autocomplete="off">
       <span class="absolute inset-y-0 right-2 flex items-center pl-2">
@@ -19,6 +19,9 @@
   <%= case @items do %>
   <%= [] -> %>No record found
   <%= _ -> %>
+  <div class="flex space-x-3 mb-3 text-sm font-bold">
+    <a phx-click="clear">Clear</a>
+  </div>
   <div class="flex max-h-[630px] overflow-auto">
     <ul class="space-y-2 mb-0">
       <%= for item <- @items do %>
