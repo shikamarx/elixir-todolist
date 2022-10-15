@@ -1,7 +1,15 @@
-<div class="mt-6 p-6 bg-green-50 rounded-lg shadow-xl">
-  <div class="flex flex-row justify-between mb-6">
+<div class="mt-6 p-6 pb-3 bg-green-50 rounded-lg shadow-xl">
+  <div class="flex flex-row items-center mb-6">
     <span class="text-xl font-bold">#TodoList</span>
-    <span class="text-sm font-bold"><%= "#{@done_count}/#{Enum.count(@items)}" %></span>
+    <%= if @items != [] do %>
+    <div class="flex items-center space-x-3 ml-3 pl-3 h-6 text-sm border-gray-400 border-r-0 border-y-0 border-[1px]">
+      <%= case @toggle_marking_action do %>
+      <%= "mark_all" -> %><a phx-click="mark_all" class="hover:cursor-pointer pb-0">Mark all</a>
+      <%= "unmark_all" -> %><a phx-click="unmark_all" class="hover:cursor-pointer">Unmark all</a>
+      <% end %>
+      <a phx-click="clear" class="hover:cursor-pointer">Clear</a>
+    </div>
+    <% end %>
   </div>
   <form phx-submit="add" class="mb-3">
     <div class="relative">
@@ -19,13 +27,6 @@
   <%= case @items do %>
   <%= [] -> %>No record found
   <%= _ -> %>
-  <div class="flex space-x-3 mb-3 text-sm font-bold">
-    <%= case @toggle_marking_action do %>
-    <%= "mark_all" -> %><a phx-click="mark_all">Mark all</a>
-    <%= "unmark_all" -> %><a phx-click="unmark_all">Unmark all</a>
-    <% end %>
-    <a phx-click="clear">Clear</a>
-  </div>
   <div class="flex max-h-[630px] overflow-auto">
     <ul class="space-y-2 mb-0">
       <%= for item <- @items do %>
@@ -46,6 +47,9 @@
     </ul>
   </div>
   <% end %>
+  <div class="mt-3 text-xs text-gray-600">
+    All records <%= "(#{Enum.count(@items)})" %> - Completed <%= "(#{@done_count})" %>
+  </div>
 </div>
 <div class="mt-3 mb-6 flex justify-between text-xs text-gray-400">
   <span class="text-gray-500">&copy Copyright <%= DateTime.utc_now.year %> - <a class="text-inherit hover:text-inherit" target="blank" href="https://github.com/shikamarx">Shikamarx</a></span>
