@@ -8,10 +8,8 @@ defmodule TodoWeb.TodoLive do
   end
 
   def handle_event("add", %{"content" => content}, socket) do
-    case items = App.add(content) do
-      {:error, error_message} -> {:noreply, assign(socket, items: socket.assigns.items, error: error_message)}
-      _ -> {:noreply, assign(socket, items: items, error: "", toggle_marking_action: items |> App.marking_action)}
-    end
+    items = App.add(content)
+    {:noreply, assign(socket, items: items, error: "", toggle_marking_action: items |> App.marking_action)}
   end
 
   def handle_event("delete", %{"id" => id}, socket) do

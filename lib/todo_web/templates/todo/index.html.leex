@@ -48,13 +48,16 @@
   </div>
   <% end %>
   <div class="mt-3 text-xs text-gray-600">
-    All records <%= "(#{Enum.count(@items)})" %> - Completed <%= "(#{@done_count})" %>
+    All records <%= count = Enum.count(@items) %>, <%= @done_count %> completed and <%= count - @done_count %> pending
   </div>
 </div>
 <div class="mt-3 mb-6 flex justify-between text-xs text-gray-400">
   <span class="text-gray-500">&copy Copyright <%= DateTime.utc_now.year %> - <a class="text-inherit hover:text-inherit" target="blank" href="https://github.com/shikamarx">Shikamarx</a></span>
   <span>
-    Background image by
-    <a class="text-inherit hover:text-inherit" target="blank" href="https://www.freepik.com/free-vector/hand-painted-watercolor-nature-background_13723081.htm#query=nature&position=12&from_view=keyword"><strong>Freepik</strong></a>
+    <a class="text-inherit hover:text-inherit" target="blank" href="https://www.flaticon.com/free-icon/to-do-list_1560"><strong>Favicon</strong></a>
+    and background
+    <a class="text-inherit hover:text-inherit" target="blank" href="https://www.freepik.com/free-vector/hand-painted-watercolor-nature-background_13723081.htm#query=nature&position=12&from_view=keyword"><strong>image</strong></a>
+    by
+    <a class="text-inherit hover:text-inherit" target="blank" href="https://www.freepik.com"><strong>Freepik</strong></a>
   </span>
 </div>

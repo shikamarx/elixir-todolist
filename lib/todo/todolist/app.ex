@@ -9,7 +9,7 @@ defmodule Todo.Todolist.App do
   def add(content) do
     Todolist.create_item(%{content: content |> String.trim, status: false})
 
-    init
+    init()
   end
 
   def change_status(id) do
@@ -19,7 +19,7 @@ defmodule Todo.Todolist.App do
 
     Todolist.update_item(item, %{status: !item.status})
 
-    init
+    init()
   end
 
   def delete(id) do
@@ -28,7 +28,7 @@ defmodule Todo.Todolist.App do
       |> Todolist.get_item!
       |> Todolist.delete_item
 
-    init
+    init()
   end
 
   def clear do
@@ -40,14 +40,14 @@ defmodule Todo.Todolist.App do
     Todolist.list_items
       |> Enum.map(&(Todolist.update_item(&1, %{status: true})))
 
-    init
+    init()
   end
 
   def unmark_all do
     Todolist.list_items
       |> Enum.map(&(Todolist.update_item(&1, %{status: false})))
 
-    init
+    init()
   end
 
   def marking_action(items \\ []) do
