@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="nope">
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -12,7 +12,10 @@
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
     <link rel="icon" type="image/x-icon" href="../images/to-do-list.png">
   </head>
-  <body class="bg-body font-sans">
-    <%= @inner_content %>
+  <body class="bg-body relative font-sans">
+    <div class="container mx-auto max-w-[960px] z-50">
+      <%= @inner_content %>
+    </div>
+    <div class="dark:bg-gray-600 dark:opacity-90 fixed h-full w-full top-0 -z-50"></div>
   </body>
 </html>

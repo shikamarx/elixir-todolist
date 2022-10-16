@@ -1,5 +1,5 @@
-<div class="mt-6 p-6 pb-3 bg-green-50 rounded-lg shadow-xl">
-  <div class="flex flex-row items-center mb-6">
+<div class="mt-6 p-6 pb-3 rounded-lg shadow-xl bg-green-50 dark:bg-gray-700 dark:text-white">
+  <div class="flex flex-row items-center mb-3">
     <span class="text-xl font-bold">#TodoList</span>
     <%= if @items != [] do %>
     <div class="flex items-center space-x-3 ml-3 pl-3 h-6 text-sm border-gray-400 border-r-0 border-y-0 border-[1px]">
@@ -11,11 +11,11 @@
     </div>
     <% end %>
   </div>
-  <form phx-submit="add" class="mb-3">
+  <form phx-submit="add" class="mb-6">
     <div class="relative">
-      <input name="content" type="text" class='w-full py-2 text-gray-600 bg-green-100 border-x-0 border-t-0 pr-11 focus:ring-0 focus:bg-white focus:text-gray-600 focus:outline-none <%= if @error != "" do "focus:border-red-600 border-red-600"; else "focus:border-green-600" end %>' placeholder="Add new item here" autocomplete="off">
-      <span class="absolute inset-y-0 right-2 flex items-center pl-2">
-        <button class='text-white <%= if @error != "" do "bg-red-600"; else "bg-gray-600" end %>'>
+      <input name="content" type="text" class='w-full pl-3 pr-14 py-2 text-gray-600 bg-green-100 dark:bg-gray-800 border-x-0 border-t-0 dark:border-purple-600 dark:text-white dark:border-b-1 focus:ring-0 focus:bg-white focus:text-gray-600 focus:outline-none <%= if @error != "" do "focus:border-red-600 border-red-600"; else "focus:border-green-600" end %>' placeholder="Add new item here" autocomplete="off">
+      <span class="absolute inset-y-0 right-4 flex items-center pl-2">
+        <button class='text-white <%= if @error != "" do "bg-red-600"; else "bg-gray-600 dark:bg-purple-600" end %>'>
           <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-7 h-7 p-1"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         </button>
       </span>
@@ -27,18 +27,20 @@
   <%= case @items do %>
   <%= [] -> %>No record found
   <%= _ -> %>
-  <div class="flex max-h-[630px] overflow-auto">
+  <div class="max-h-[630px] overflow-auto">
     <ul class="space-y-2 mb-0">
       <%= for item <- @items do %>
       <li>
-        <div class="p-3 flex items-center justify-between bg-green-100"  style="width: 100% !impotant;">
+        <div class="p-3 flex items-center justify-between bg-green-100 dark:bg-gray-600">
           <div class="flex pr-3 items-center">
-            <input phx-click="change_status" phx-value-id="<%= item.id %>" <%= if item.status do %>checked<% else %><% end %> type="checkbox" class="mr-3 border-3 text-green-600 border-green-600 focus:ring-offset-0 focus:ring-0">
+            <input phx-click="change_status" phx-value-id="<%= item.id %>" <%= if item.status do %>checked<% else %><% end %> type="checkbox" class="mr-3 border-3 text-green-600 dark:text-purple-600 border-green-600 dark:border-purple-900 focus:ring-offset-0 focus:ring-0 cursor-pointer">
             <span class="<%= if item.status do 'text-gray-400 line-through' end %>"><%= item.content %></span>
           </div>
-          <a phx-click="delete" phx-value-id="<%= item.id %>">
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-7 h-7 p-1 text-red-600">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          <a phx-click="delete" phx-value-id="<%= item.id %>" class="hover:cursor-pointer">
+            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-4 h-4 p-0 text-red-500">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line>
             </svg>
           </a>
         </div>
@@ -47,12 +49,26 @@
     </ul>
   </div>
   <% end %>
-  <div class="mt-3 text-xs text-gray-600">
-    All records <%= count = Enum.count(@items) %>, <%= @done_count %> completed and <%= count - @done_count %> pending
+  <div class="mt-3 text-xs text-gray-600 flex justify-between items-center dark:text-white">
+    <div class="flex items-center">
+      All records <%= count = Enum.count(@items) %>, <%= @done_count %> completed and <%= count - @done_count %> pending
+    </div>
+    <div class="flex items-center space-x-1">
+      <span>Light</span>
+      <div class="flex items-center">
+        <input <%= if @dark_mode do "checked" end %> type="checkbox" id="toggleDarkMode" class="hidden" phx-click="toggle_dark_mode" phx-value-dark_mode="<%= @dark_mode %>">
+        <label for="toggleDarkMode" class="mb-0">
+          <div class="switch-bg bg-yellow-400 w-7 h-4 rounded-full flex items-center p-1 cursor-pointer">
+            <div class="switch-dot bg-white w-3 h-3 rounded-full shadow-md transform duration-300 ease-in-out"></div>
+          </div>
+        </label>
+      </div>
+      <span>Dark</span>
+    </div>
   </div>
 </div>
-<div class="mt-3 mb-6 flex justify-between text-xs text-gray-400">
-  <span class="text-gray-500">&copy Copyright <%= DateTime.utc_now.year %> - <a class="text-inherit hover:text-inherit" target="blank" href="https://github.com/shikamarx">Shikamarx</a></span>
+<div class="mt-3 mb-6 flex justify-between text-xs text-gray-400 dark:text-white">
+  <span class="text-gray-500 dark:text-white">&copy Copyright <%= DateTime.utc_now.year %> - <a class="text-inherit hover:text-inherit" target="blank" href="https://github.com/shikamarx">Shikamarx</a></span>
   <span>
     <a class="text-inherit hover:text-inherit" target="blank" href="https://www.flaticon.com/free-icon/to-do-list_1560"><strong>Favicon</strong></a>
     and background
@@ -61,3 +77,11 @@
     <a class="text-inherit hover:text-inherit" target="blank" href="https://www.freepik.com"><strong>Freepik</strong></a>
   </span>
 </div>
+
+<script>
+  window.addEventListener("click", e => {
+    if ("toggleDarkMode" === e.target.id) {
+      document.querySelector("html").classList.toggle("dark");
+    }
+  });
+</script>

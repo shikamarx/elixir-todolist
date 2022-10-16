@@ -1,3 +1,11 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+#toggleDarkMode:checked ~ label div.switch-dot {
+    @apply translate-x-2;
+}
+
+#toggleDarkMode:checked ~ label div.switch-bg {
+    @apply bg-purple-500;
+}
